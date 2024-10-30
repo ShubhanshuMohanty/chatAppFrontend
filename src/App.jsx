@@ -2,10 +2,10 @@ import React, { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProtectRoute from "./components/auth/ProtectRoute";
 import { LayoutLoader } from "./components/layout/Loaders";
-import axios from 'axios'
+import axios from "axios";
 import { server } from "./constants/config";
 import { useDispatch, useSelector } from "react-redux";
-import { userNotExists } from "./redux/reducers/auth";
+import { userExists, userNotExists } from "./redux/reducers/auth";
 import { Toaster } from "react-hot-toast";
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
@@ -23,19 +23,23 @@ const MessagesManagement = lazy(() =>
 
 let user = true;
 function App() {
-  const{user,loader}=useSelector(state=>state.auth);
-  const dispatch=useDispatch();
-  useEffect(()=>{
+  const { user, loader } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  useEffect(() => {
     // console.log(server);
-    
-    axios.get(`${server}/api/v1/user/me`).then((res)=>console.log(res))
-    .catch((err)=>dispatch(userNotExists()))
-  },[dispatch]);
+
+    axios
+      .get(`${server}/api/v1/user/me`, { withCredentials: true })
+      .then((res) => {
+        dispatch(userExists(res.data.user))
+      })
+      .catch((err) => dispatch(userNotExists()));
+  }, [dispatch]);
   return loader ? (
     <LayoutLoader />
   ) : (
     <BrowserRouter>
-      <Suspense fallback={<LayoutLoader/>}>
+      <Suspense fallback={<LayoutLoader />}>
         <Routes>
           {/* <Route path='/' element={<ProtectRoute user={user}>
                 <Home/>
@@ -54,7 +58,7 @@ function App() {
             <Route path="/login" element={<Login />} />
           </Route>
 
-          <Route path="/admin" element={<AdminLogin/>}/>
+          <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/users" element={<UserManagement />} />
           <Route path="/admin/chats" element={<ChatManagement />} />

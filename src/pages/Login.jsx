@@ -17,6 +17,7 @@ import { useFileHandler, useInputValidation } from "6pp";
 
 function Login() {
   const [isLogin, setIsLogin] = useState(true);
+  
 
   const name = useInputValidation("");
   const bio = useInputValidation("");
@@ -91,6 +92,8 @@ function Login() {
         },
         config
       );
+      console.log("data=",data);
+      
       dispatch(userExists(data.user));
       toast.success(data.message, {
         id: toastId,
@@ -103,6 +106,9 @@ function Login() {
       });
     } finally {
       // setIsLoading(false);
+      // const{user,loader}=useSelector(state=>state.auth);
+      // console.log("user=",user);
+      
     }
   };
   return (
@@ -325,7 +331,7 @@ function Login() {
 import { VisuallyHiddenInput } from "../components/styles/StyledComponents";
 import { usernameValidator } from "../utils/validators";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userExists } from "../redux/reducers/auth";
 
 export default Login;

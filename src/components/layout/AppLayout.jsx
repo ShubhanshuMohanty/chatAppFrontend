@@ -1,19 +1,22 @@
 import React from "react";
 import Header from "./Header";
 import Title from "../shared/Title";
-import { Grid, Grid2 } from "@mui/material";
+import { Grid, Grid2, Skeleton } from "@mui/material";
 import ChatList from "../specific/ChatList";
 import { samepleChats } from "../../constants/sampleData";
 import { useParams } from "react-router-dom";
 import Profile from "../specific/Profile";
+import { useMyChatsQuery } from "../../redux/api/api";
 
 const AppLayout = () => (WrappedComponents) => {
   return (props) => {
+    const params = useParams();
+    const chatId = params.chatId;
 
-    const params=useParams()
-    const chatId=params.chatId;
+    const { isLoading, data, isError, error, refetch } = useMyChatsQuery("");
+    console.log("data : ", data);
 
-    const handleDeleteChat=() => {
+    const handleDeleteChat = () => {
       console.log("delete chat");
     };
 
@@ -31,18 +34,22 @@ const AppLayout = () => (WrappedComponents) => {
             }}
             height={"100%"}
           >
-            <ChatList
-              chats={samepleChats}
-              chatId={chatId}
-              // newMessagesAlert={[
-              //   {
-              //     chatId,
-              //     count: 4,
-              //   },
-              // ]}
-              // onlineUsers={["1", "2"]}
-              handleDeleteChat={() => console.log("delete chat")}
-            />
+            {isLoading ? (
+              <Skeleton />
+            ) : (
+              <ChatList
+                chats={samepleChats}
+                chatId={chatId}
+                // newMessagesAlert={[
+                //   {
+                //     chatId,
+                //     count: 4,
+                //   },
+                // ]}
+                // onlineUsers={["1", "2"]}
+                handleDeleteChat={() => console.log("delete chat")}
+              />
+            )}
           </Grid>
           <Grid
             item
@@ -66,7 +73,7 @@ const AppLayout = () => (WrappedComponents) => {
               bgcolor: "rgba(0,0,0,0.85)",
             }}
           >
-            <Profile/>
+            <Profile />
           </Grid>
         </Grid>
       </>

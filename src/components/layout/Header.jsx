@@ -19,6 +19,10 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { userNotExists } from "../../redux/reducers/auth";
+import toast from "react-hot-toast";
+import { server } from "../../constants/config";
 // import NotificationsIcon from '@mui/icons-material/NotificationsNone';
 // import SearchDialoge from '../specific/Search'
 
@@ -33,6 +37,7 @@ function Header() {
   const [isNewGroup, setIsNewGroup] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleMobile = () => {
     setIsMobile((prev) => !prev);
@@ -41,7 +46,7 @@ function Header() {
 
   const openSearchDialoge = () => {
     setIsSearch((prev) => !prev);
-    console.log("Search Dialogue",isSearch,isNotification);
+    console.log("Search Dialogue", isSearch, isNotification);
   };
 
   const openNewGroup = () => {
@@ -56,12 +61,23 @@ function Header() {
 
   const openNotification = () => {
     setIsNotification((prev) => !prev);
-    console.log("Notification Clicked",isNotification);
+    console.log("Notification Clicked", isNotification);
   };
 
-  const logoutHandler = () => {
+  const logoutHandler = async () => {
     // TODO: Implement logout logic
     console.log("User logged out");
+    try {
+      const { data } = await axios.get(`${server}/api/v1/user/logout`, {
+        withCredentials: true,
+      });
+      dispatch(userNotExists());
+      toast.success(data.message);
+    } catch (error) {
+      console.log("error", error);
+      
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
   };
 
   return (
@@ -132,19 +148,19 @@ function Header() {
       </Box>
 
       {isSearch && (
-        <Suspense fallback={<Backdrop open/>}>
+        <Suspense fallback={<Backdrop open />}>
           <SearchDialoge />
         </Suspense>
       )}
 
       {isNotification && (
-        <Suspense fallback={<Backdrop open/>}>
+        <Suspense fallback={<Backdrop open />}>
           <NotificationDialoge />
         </Suspense>
       )}
 
       {isNewGroup && (
-        <Suspense fallback={<Backdrop open/>}>
+        <Suspense fallback={<Backdrop open />}>
           <NewGroupDialog />
         </Suspense>
       )}

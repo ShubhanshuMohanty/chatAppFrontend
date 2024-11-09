@@ -1,29 +1,53 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "./Header";
 import Title from "../shared/Title";
-import { Grid, Grid2, Skeleton } from "@mui/material";
+import { Drawer, Grid, Grid2, Skeleton } from "@mui/material";
 import ChatList from "../specific/ChatList";
 import { samepleChats } from "../../constants/sampleData";
 import { useParams } from "react-router-dom";
 import Profile from "../specific/Profile";
 import { useMyChatsQuery } from "../../redux/api/api";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsMobile } from "../../redux/reducers/misc";
 
 const AppLayout = () => (WrappedComponents) => {
   return (props) => {
     const params = useParams();
     const chatId = params.chatId;
+    const dispatch = useDispatch();
+
+    const {isMobile}=useSelector((state=>state.misc))
 
     const { isLoading, data, isError, error, refetch } = useMyChatsQuery("");
     console.log("data : ", data);
 
+    useEffect(()=>{
+  
+    },[])
     const handleDeleteChat = () => {
       console.log("delete chat");
     };
+
+    const handleMobileClose = () => dispatch(setIsMobile(false));
 
     return (
       <>
         <Title />
         <Header />
+        {isLoading ? (
+          <Skeleton />
+        ) : (
+          <Drawer open={isMobile} onClose={handleMobileClose}>
+            <ChatList
+              w="70vw"
+              chats={data?.chats}
+              chatId={chatId}
+              handleDeleteChat={handleDeleteChat}
+              // newMessagesAlert={newMessagesAlert}
+              // onlineUsers={onlineUsers}
+            />
+          </Drawer>
+        )}
         <Grid container height={"calc(100vh - 4rem)"}>
           <Grid
             item
@@ -38,16 +62,11 @@ const AppLayout = () => (WrappedComponents) => {
               <Skeleton />
             ) : (
               <ChatList
-                chats={samepleChats}
+                chats={data?.chats}
                 chatId={chatId}
-                // newMessagesAlert={[
-                //   {
-                //     chatId,
-                //     count: 4,
-                //   },
-                // ]}
-                // onlineUsers={["1", "2"]}
-                handleDeleteChat={() => console.log("delete chat")}
+                handleDeleteChat={handleDeleteChat}
+                // newMessagesAlert={newMessagesAlert}
+                // onlineUsers={onlineUsers}
               />
             )}
           </Grid>

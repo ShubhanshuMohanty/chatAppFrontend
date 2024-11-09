@@ -23,6 +23,7 @@ import { useDispatch } from "react-redux";
 import { userNotExists } from "../../redux/reducers/auth";
 import toast from "react-hot-toast";
 import { server } from "../../constants/config";
+import { setIsMobile } from "../../redux/reducers/misc";
 // import NotificationsIcon from '@mui/icons-material/NotificationsNone';
 // import SearchDialoge from '../specific/Search'
 
@@ -31,7 +32,8 @@ const NotificationDialoge = lazy(() => import("../specific/Notifications"));
 const NewGroupDialog = lazy(() => import("../specific/NewGroup"));
 
 function Header() {
-  const [isMobile, setIsMobile] = useState(false);
+  // const [isMobile, setIsMobile] = useState(false);
+  
   const [isSearch, setIsSearch] = useState(false);
   const [isNotification, setIsNotification] = useState(false);
   const [isNewGroup, setIsNewGroup] = useState(false);
@@ -40,7 +42,7 @@ function Header() {
   const dispatch = useDispatch();
 
   const handleMobile = () => {
-    setIsMobile((prev) => !prev);
+    dispatch(setIsMobile(true));
     console.log("Mobile Menu");
   };
 

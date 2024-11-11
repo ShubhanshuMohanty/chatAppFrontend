@@ -9,6 +9,7 @@ import Profile from "../specific/Profile";
 import { useMyChatsQuery } from "../../redux/api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsMobile } from "../../redux/reducers/misc";
+import { useErrors } from "../../hooks/hook";
 
 const AppLayout = () => (WrappedComponents) => {
   return (props) => {
@@ -21,9 +22,7 @@ const AppLayout = () => (WrappedComponents) => {
     const { isLoading, data, isError, error, refetch } = useMyChatsQuery("");
     console.log("data : ", data);
 
-    useEffect(()=>{
-  
-    },[])
+    useErrors([isError,error])
     const handleDeleteChat = () => {
       console.log("delete chat");
     };

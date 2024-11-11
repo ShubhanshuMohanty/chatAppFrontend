@@ -19,7 +19,7 @@ const UserItem = ({
         width={"100%"}
         {...styling}
       >
-        <Avatar />
+        <Avatar src={avatar} />
         <Typography
           variant="body1"
           sx={{
@@ -44,10 +44,9 @@ const UserItem = ({
             },
           }}
           onClick={() => handler(_id)}
-          disabled={handlerIsLoading}
+          // disabled={handlerIsLoading}
         >
           {isAdded ? <RemoveIcon /> : <AddIcon />}
-          {/* <AddIcon /> */}
         </IconButton>
       </Stack>
     </ListItem>

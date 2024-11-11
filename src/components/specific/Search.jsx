@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import {
   Dialog,
   DialogTitle,
@@ -16,16 +17,30 @@ import UserItem from "../shared/UserItem";
 import { sampleUsers } from "../../constants/sampleData";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsSearch } from "../../redux/reducers/misc";
-import { useLazySearchUserQuery } from "../../redux/api/api";
+import { useLazySearchUserQuery, useSendFriendRequestMutation } from "../../redux/api/api";
 const Search = () => {
   const { isSearch } = useSelector((state) => state.misc);
   const [searchUser]=useLazySearchUserQuery()
+  const [sendFriendRequest]=useSendFriendRequestMutation();
   const search = useInputValidation("");
   const [users, setUsers] = useState([]);
   const dispatch = useDispatch();
 
-  const addFriendHandler = ()=> {
+  const addFriendHandler = async(id)=> {
     // Add friend logic here
+    try {
+      const res=await sendFriendRequest({userId: id})
+      if(res.data){
+        toast.success("Friend request sent successfully!");
+      }
+      else{
+        console.log(res);
+        
+        toast.error(res?.error?.data?.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
   const isLoadingSendFriendRequest=()=>{
     console.log("isLoadingSendFriendRequest");

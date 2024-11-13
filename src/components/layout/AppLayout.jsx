@@ -22,7 +22,7 @@ const AppLayout = () => (WrappedComponents) => {
     const { isLoading, data, isError, error, refetch } = useMyChatsQuery("");
     console.log("data : ", data);
 
-    useErrors([isError,error])
+    useErrors([{ isError, error }]);
     const handleDeleteChat = () => {
       console.log("delete chat");
     };

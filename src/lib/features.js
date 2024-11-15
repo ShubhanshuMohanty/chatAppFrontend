@@ -2,7 +2,7 @@ import moment from "moment";
 
 const fileFormat = (url = "") => {
   const fileExt = url.split(".").pop();
-  console.log("fileExt: " + fileExt);
+  // console.log("fileExt: " + fileExt);
 
   if (fileExt === "mp4" || fileExt === "webm" || fileExt === "ogg")
     return "video";

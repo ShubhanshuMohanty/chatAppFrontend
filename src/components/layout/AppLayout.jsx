@@ -10,7 +10,7 @@ import { useMyChatsQuery } from "../../redux/api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsMobile } from "../../redux/reducers/misc";
 import { useErrors } from "../../hooks/hook";
-
+import { getSocket } from "../../socket";
 const AppLayout = () => (WrappedComponents) => {
   return (props) => {
     const params = useParams();
@@ -20,7 +20,8 @@ const AppLayout = () => (WrappedComponents) => {
     const {isMobile}=useSelector((state=>state.misc))
     const {user}=useSelector((state=>state.auth))
     const { isLoading, data, isError, error, refetch } = useMyChatsQuery("");
-    console.log("data : ", data);
+    const socket=getSocket();
+    // console.log(socket.id);
 
     useErrors([{ isError, error }]);
     const handleDeleteChat = () => {
@@ -78,7 +79,7 @@ const AppLayout = () => (WrappedComponents) => {
             height={"100%"}
             bgcolor="primary.main"
           >
-            <WrappedComponents {...props} />
+            <WrappedComponents {...props} chatId={chatId} user={user}/>
           </Grid>
           <Grid
             item

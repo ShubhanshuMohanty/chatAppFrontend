@@ -23,6 +23,7 @@ import { NEW_MESSAGE } from "../constants/events";
 import { useChatDetailsQuery, useGetMessagesQuery } from "../redux/api/api";
 import { useErrors, useSocketEvents } from "../hooks/hook";
 import { useInfiniteScrollTop } from "6pp";
+import { setIsFileMenu } from "../redux/reducers/misc";
 
 function Chat({ chatId, user }) {
   const containerRef = useRef(null);
@@ -64,7 +65,10 @@ function Chat({ chatId, user }) {
   ];
   console.log("oldMessagesChunk", oldMessages);
   
-  
+  const handleFileOpen=(e)=>{
+    dispatch(setIsFileMenu(true))
+    dispatch(setFileMenuAnchor(e.currentTarget))
+  }
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -146,6 +150,7 @@ function Chat({ chatId, user }) {
               left: "1.5rem",
               rotate: "30deg",
             }}
+            onClick={handleFileOpen}
           >
             <AttachFileIcon />
           </IconButton>
@@ -171,7 +176,7 @@ function Chat({ chatId, user }) {
           </IconButton>
         </Stack>
       </form>
-      <FileMenu />
+      <FileMenu anchorE1={fileMenuAnchor} chatId={chatId} />
     </Fragment>
   );
 }
